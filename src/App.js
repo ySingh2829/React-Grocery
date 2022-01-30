@@ -7,20 +7,38 @@ import Footer from './Components/Footer';
 import SearchItems from './Components/SearchItems';
 
 
-function isSaved(key, initalValue = []) {
-  const savedValue = JSON.parse(localStorage.getItem(key));
-
-  if (!savedValue) return initalValue;
-  return savedValue;
-}
-
 function App() {
+  const API_URL = 'http://localhost:3500/items';
   const [item, setItem] = useState({});
-  const [itemList, setItemList] = useState(() => { return isSaved('shoppingList') });
+  const [items, setItems] = useState([]);
+  const [search, setSearch] = useState('');
+  const [fetchError, setFetchError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('shoppingList', JSON.stringify(itemList));
-  }, [itemList]);
+    const fetchData = async() => {
+      try {
+        const response = await fetch(API_URL);
+        if (response.ok) {
+          const responseData = await response.json();
+          setFetchError(null);
+          return setItems(responseData);
+        }
+        throw new Error("Did not recieve data.");
+      } catch (err) {
+        setFetchError(err.message)
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    const timeoutId = setTimeout(() => fetchData(), 2000)
+
+    return () => {
+      clearTimeout(timeoutId);
+    }
+
+  }, []);
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -40,41 +58,49 @@ function App() {
     
     if (!item.item || !item.num) return;
 
-    setItemList(prev => ([item, ...prev]));
+    setItems(prev => ([item, ...prev]));
     setItem({});
   }
 
   const handleCheck = (targetId) => {
-    const listOfItems = itemList.map(item => item.id === targetId ? {...item, isChecked: !item.isChecked} : item);
+    const listOfItems = items.map(item => item.id === targetId ? {...item, isChecked: !item.isChecked} : item);
 
-    setItemList(listOfItems);
+    setItems(listOfItems);
   }
 
   const handleDelete = (targetRemoveId) => {
-    const listOfItems = itemList.filter(item => item.id !== targetRemoveId);
+    const listOfItems = items.filter(item => item.id !== targetRemoveId);
 
-    setItemList(listOfItems);
-  }
-
-  const handleSearch = ({ target }) => {
-    // const { value } = target;
+    setItems(listOfItems);
   }
 
   return (
     <div className="App">
       <Header />
-      <SearchItems
-        handleSearch={handleSearch}
-      />
-      <AddItem item={item} 
+      <AddItem 
+        item={item} 
         handleChange={handleChange} 
         handleSubmit={handleSubmit}
       />
-      <Content items={itemList}
-        handleCheck={handleCheck}
-        handleDelete={handleDelete}
+      <SearchItems
+        search={search}
+        handleSearch={setSearch}
       />
-      <Footer items={itemList}/>
+      <main>
+        {isLoading && <p style={{textAlign: "center", fontSize: "1.4rem"}}>Loading list...</p>}
+        {fetchError && <h3 style={{textAlign: "center", color: "red", marginTop: "50px"}}>Error: {fetchError}</h3>}
+        {!fetchError && !isLoading && (
+          <Content 
+            items={items.filter(item => ((item.item).toLowerCase()).includes(search.toLowerCase()))}
+            search={search}
+            handleCheck={handleCheck}
+            handleDelete={handleDelete}
+          />
+        )}
+      </main>
+      <Footer 
+        items={items}
+      />
     </div>
   );
 }

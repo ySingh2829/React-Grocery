@@ -1,12 +1,15 @@
 import React from 'react';
 
-export default function SearchItems({ handleSearch }) {
+export default function SearchItems({ search, handleSearch }) {
   return (
-        <div className='search'>
+        <form className='search' onSubmit={e => e.preventDefault()}>
             <label>Search  </label>
-            <input type="text"    
-                onChange={handleSearch}
+            <input 
+                type="text"
+                placeholder="Search"
+                value={search}    
+                onChange={e => handleSearch(e.target.value)}
             />        
-        </div>
+        </form>
     );
 }

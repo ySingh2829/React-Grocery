@@ -1,7 +1,7 @@
 import React from 'react';
 import ItemList from './ItemList';
 
-export default function Content({ items, handleCheck, handleDelete }) {
+export default function Content({ items, search, handleCheck, handleDelete }) {
   return (
       <>
         {items.length ? (
@@ -11,7 +11,7 @@ export default function Content({ items, handleCheck, handleDelete }) {
                     handleDelete={handleDelete}
                 />
             ) : (
-                <h2 style={{textAlign: "center"}}>List is Empty</h2>
+                <h2 style={{textAlign: "center", marginTop: "80px"}}>{search ? `${search} is not in the list.` : 'List is empty.'}</h2>
             )}
         </>
   );
