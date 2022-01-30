@@ -5,11 +5,12 @@ import AddItem from './Components/AddItem';
 import Content from './Components/Content';
 import Footer from './Components/Footer';
 import SearchItems from './Components/SearchItems';
+import apiRequest from './Components/apiRequest';
 
 
 function App() {
   const API_URL = 'http://localhost:3500/items';
-  const [item, setItem] = useState({});
+  const [newItem, setNewItem] = useState({});
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState('');
   const [fetchError, setFetchError] = useState(null);
@@ -45,7 +46,7 @@ function App() {
 
     console.log(value)
 
-    setItem(prev => ({
+    setNewItem(prev => ({
       ...prev,
       [name]: value.charAt(0).toUpperCase() + value.slice(1),
       id: Date.now(),
@@ -53,32 +54,66 @@ function App() {
     }));
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!item.item || !item.num) return;
+    if (!newItem.item || !newItem.num) return;
 
-    setItems(prev => ([item, ...prev]));
-    setItem({});
+    setItems(prev => ([newItem, ...prev]));
+    setNewItem({});
+
+    const postOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newItem)
+    }
+
+    const result = await apiRequest(API_URL, postOptions);
+    if (result) setFetchError(result);
   }
 
-  const handleCheck = (targetId) => {
-    const listOfItems = items.map(item => item.id === targetId ? {...item, isChecked: !item.isChecked} : item);
+  const handleCheck = async (id) => {
+    const listOfItems = items.map(item => item.id === id ? {...item, isChecked: !item.isChecked} : item);
 
     setItems(listOfItems);
+
+    const updateItem = listOfItems.filter(item => item.id === id);
+
+    const updateOptions = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({isChecked: updateItem[0].isChecked})
+    }
+
+    const reqUrl = `${API_URL}/${id}`;
+
+    const result = await apiRequest(reqUrl, updateOptions);
+
+    if (result) setFetchError(result);
   }
 
-  const handleDelete = (targetRemoveId) => {
-    const listOfItems = items.filter(item => item.id !== targetRemoveId);
+  const handleDelete = async (id) => {
+    const listOfItems = items.filter(item => item.id !== id);
 
     setItems(listOfItems);
+
+    const deleteOptions = {method: 'DELETE'};
+    const reqUrl = `${API_URL}/${id}`;
+
+    const result = await apiRequest(reqUrl, deleteOptions);
+
+    if (result) setFetchError(result);
   }
 
   return (
     <div className="App">
       <Header />
       <AddItem 
-        item={item} 
+        item={newItem} 
         handleChange={handleChange} 
         handleSubmit={handleSubmit}
       />
@@ -87,7 +122,7 @@ function App() {
         handleSearch={setSearch}
       />
       <main>
-        {isLoading && <p style={{textAlign: "center", fontSize: "1.4rem"}}>Loading list...</p>}
+        {isLoading && <p style={{textAlign: "center", fontSize: "1.4rem", marginTop: "50px"}}>Loading list...</p>}
         {fetchError && <h3 style={{textAlign: "center", color: "red", marginTop: "50px"}}>Error: {fetchError}</h3>}
         {!fetchError && !isLoading && (
           <Content 

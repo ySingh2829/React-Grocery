@@ -1,28 +1,22 @@
 {
-    "items": [
-        {
-            "id": 1,
-            "isChecked": false,
-            "item": "Almonds",
-            "num" : "3"
-        },
-        {
-            "id": 2,
-            "isChecked": false,
-            "item": "Pizza",
-            "num" : "2"
-        },
-        {
-            "id": 3,
-            "isChecked": false,
-            "item": "Potatoes",
-            "num" : "10"
-        },
-        {
-            "id": 4,
-            "isChecked": false,
-            "item": "Pepsi",
-            "num" : "4"
-        }
-    ]
+  "items": [
+    {
+      "item": "Apples",
+      "id": 1643554484413,
+      "isChecked": false,
+      "num": "3"
+    },
+    {
+      "item": "Potatoes",
+      "id": 1643554538314,
+      "isChecked": true,
+      "num": "15"
+    },
+    {
+      "item": "Pepperoni pizza",
+      "id": 1643559990970,
+      "isChecked": false,
+      "num": "2"
+    }
+  ]
 }

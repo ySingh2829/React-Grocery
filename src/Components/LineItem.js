@@ -6,7 +6,6 @@ export default function LineItem({ item, handleCheck, handleDelete }) {
         <li 
             key={item.id} 
             className="line-item"
-            onDoubleClick={() => handleCheck(item.id)}
         >
             <input 
                 type="checkbox"

@@ -4,7 +4,7 @@
 
 .header-banner {
   position: relative;
-  background-image: url('https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/healthy-groceries-1525213305.jpg?crop=1.00xw:0.817xh;0,0.0977xh&resize=980:*');
+  background-image: url('./grocery-banner.jpg');
   background-position: center;
   height: 13vh;
   display: flex;
