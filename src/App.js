@@ -44,15 +44,15 @@ function App() {
   const handleChange = ({ target }) => {
     const { name, value } = target;
 
-    console.log(value)
-
+    
     setNewItem(prev => ({
       ...prev,
-      [name]: value.charAt(0).toUpperCase() + value.slice(1),
+      [name]: (name !== 'num') ? value.charAt(0).toUpperCase() + value.slice(1) : Number(value),
       id: Date.now(),
       isChecked: false
     }));
   }
+  console.log(newItem)
 
   const handleSubmit = async (e) => {
     e.preventDefault();

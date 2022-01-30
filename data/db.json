@@ -2,21 +2,21 @@
   "items": [
     {
       "item": "Apples",
-      "id": 1643554484413,
+      "id": 1643562258354,
       "isChecked": false,
-      "num": "3"
+      "num": 3
     },
     {
-      "item": "Potatoes",
-      "id": 1643554538314,
-      "isChecked": true,
-      "num": "15"
+      "item": "Chips",
+      "id": 1643562269222,
+      "isChecked": false,
+      "num": 5
     },
     {
-      "item": "Pepperoni pizza",
-      "id": 1643559990970,
+      "item": "Chicken",
+      "id": 1643562291772,
       "isChecked": false,
-      "num": "2"
+      "num": 1
     }
   ]
 }
